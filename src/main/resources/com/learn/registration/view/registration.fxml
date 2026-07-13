@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!--
+  REGISTRATION VIEW
+  Demonstrates every major JavaFX UI component:
+    - TextField, PasswordField
+    - ComboBox (ChoiceBox-style dropdown)
+    - RadioButton inside a ToggleGroup
+    - CheckBox (multiple independent)
+    - TextArea
+    - Slider
+    - DatePicker
+    - Separator
+    - Label, Button, Hyperlink
+    - ScrollPane, GridPane, VBox, HBox, BorderPane, StackPane, TitledPane
+-->
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.learn.registration.view.RegistrationViewController"
+            prefWidth="760" prefHeight="700"
+            stylesheets="@../css/style.css">
+
+    <!-- ═══════════════════════  TOP BAR  ═══════════════════════ -->
+    <top>
+        <VBox styleClass="top-bar" BorderPane.alignment="CENTER">
+            <Label text="User Registration" styleClass="page-title"/>
+            <Label text="Fill in all required fields and submit to register"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <!-- ═══════════════════════  CENTER (scrollable form)  ═══════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER"
+                    styleClass="scroll-pane">
+            <VBox spacing="16" styleClass="form-container">
+
+                <!-- ─── SECTION 1 : Personal Information ─── -->
+                <TitledPane text="Personal Information" collapsible="false"
+                            styleClass="section-pane">
+                    <GridPane hgap="12" vgap="10" styleClass="grid-form">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="140"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints minWidth="120" prefWidth="140"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <!-- First Name -->
+                        <Label text="First Name *" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                               styleClass="form-label"/>
+                        <TextField fx:id="firstNameField" promptText="Enter first name"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                   styleClass="form-input"/>
+
+                        <!-- Last Name -->
+                        <Label text="Last Name *" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                               styleClass="form-label"/>
+                        <TextField fx:id="lastNameField" promptText="Enter last name"
+                                   GridPane.columnIndex="3" GridPane.rowIndex="0"
+                                   styleClass="form-input"/>
+
+                        <!-- Email -->
+                        <Label text="Email *" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                               styleClass="form-label"/>
+                        <TextField fx:id="emailField" promptText="you@example.com"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                   styleClass="form-input"/>
+
+                        <!-- Phone -->
+                        <Label text="Phone *" GridPane.columnIndex="2" GridPane.rowIndex="1"
+                               styleClass="form-label"/>
+                        <TextField fx:id="phoneField" promptText="+1 555 000 0000"
+                                   GridPane.columnIndex="3" GridPane.rowIndex="1"
+                                   styleClass="form-input"/>
+
+                        <!-- Date of Birth (DatePicker) -->
+                        <Label text="Date of Birth" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                               styleClass="form-label"/>
+                        <DatePicker fx:id="dobPicker" promptText="Select date"
+                                    GridPane.columnIndex="1" GridPane.rowIndex="2"
+                                    styleClass="form-input" maxWidth="Infinity"/>
+
+                        <!-- Country (ComboBox) -->
+                        <Label text="Country *" GridPane.columnIndex="2" GridPane.rowIndex="2"
+                               styleClass="form-label"/>
+                        <ComboBox fx:id="countryCombo" promptText="Select country"
+                                  GridPane.columnIndex="3" GridPane.rowIndex="2"
+                                  maxWidth="Infinity" styleClass="form-input"/>
+
+                        <!-- Password -->
+                        <Label text="Password *" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                               styleClass="form-label"/>
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <PasswordField fx:id="passwordField" promptText="Min 8 chars, 1 upper, 1 number"
+                                           styleClass="form-input"/>
+                            <Label fx:id="pwStrengthLabel" text="" styleClass="pw-strength-weak"/>
+                        </VBox>
+
+                        <!-- Confirm Password -->
+                        <Label text="Confirm Password *" GridPane.columnIndex="2" GridPane.rowIndex="3"
+                               styleClass="form-label"/>
+                        <PasswordField fx:id="confirmPasswordField" promptText="Repeat password"
+                                       GridPane.columnIndex="3" GridPane.rowIndex="3"
+                                       styleClass="form-input"/>
+                    </GridPane>
+                </TitledPane>
+
+                <!-- ─── SECTION 2 : Gender (RadioButtons) ─── -->
+                <TitledPane text="Gender *" collapsible="false" styleClass="section-pane">
+                    <HBox spacing="24" styleClass="radio-group">
+                        <RadioButton fx:id="radioMale"   text="Male"   styleClass="form-radio"/>
+                        <RadioButton fx:id="radioFemale" text="Female" styleClass="form-radio"/>
+                        <RadioButton fx:id="radioOther"  text="Other"  styleClass="form-radio"/>
+                    </HBox>
+                </TitledPane>
+
+                <!-- ─── SECTION 3 : Hobbies (CheckBoxes) ─── -->
+                <TitledPane text="Hobbies" collapsible="false" styleClass="section-pane">
+                    <FlowPane hgap="20" vgap="8" styleClass="checkbox-group">
+                        <CheckBox fx:id="cbReading"   text="Reading"   styleClass="form-check"/>
+                        <CheckBox fx:id="cbGaming"    text="Gaming"    styleClass="form-check"/>
+                        <CheckBox fx:id="cbCooking"   text="Cooking"   styleClass="form-check"/>
+                        <CheckBox fx:id="cbTraveling" text="Traveling" styleClass="form-check"/>
+                        <CheckBox fx:id="cbMusic"     text="Music"     styleClass="form-check"/>
+                        <CheckBox fx:id="cbSports"    text="Sports"    styleClass="form-check"/>
+                        <CheckBox fx:id="cbArt"       text="Art"       styleClass="form-check"/>
+                        <CheckBox fx:id="cbCoding"    text="Coding"    styleClass="form-check"/>
+                    </FlowPane>
+                </TitledPane>
+
+                <!-- ─── SECTION 4 : Profile ─── -->
+                <TitledPane text="Profile" collapsible="false" styleClass="section-pane">
+                    <VBox spacing="10">
+
+                        <!-- Experience slider -->
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="Experience (yrs):" styleClass="form-label"/>
+                            <Slider fx:id="experienceSlider"
+                                    min="0" max="30" value="0"
+                                    showTickLabels="true" showTickMarks="true"
+                                    majorTickUnit="5" minorTickCount="4"
+                                    snapToTicks="true"
+                                    HBox.hgrow="ALWAYS"
+                                    styleClass="form-slider"/>
+                            <Label fx:id="experienceLabel" text="0 yrs"
+                                   minWidth="50" styleClass="slider-value"/>
+                        </HBox>
+
+                        <Separator/>
+
+                        <!-- Bio (TextArea) -->
+                        <Label text="Bio / About Me:" styleClass="form-label"/>
+                        <TextArea fx:id="bioArea"
+                                  promptText="Tell us something about yourself..."
+                                  prefRowCount="4" wrapText="true"
+                                  styleClass="form-textarea"/>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ─── SECTION 5 : Preferences (CheckBoxes) ─── -->
+                <TitledPane text="Preferences" collapsible="false" styleClass="section-pane">
+                    <VBox spacing="8" styleClass="checkbox-group">
+                        <CheckBox fx:id="cbNewsletter"
+                                  text="Subscribe to newsletter"
+                                  styleClass="form-check"/>
+                        <CheckBox fx:id="cbTerms"
+                                  text="I accept the Terms &amp; Conditions *"
+                                  styleClass="form-check-required"/>
+                        <Hyperlink text="View Terms &amp; Conditions"
+                                   onAction="#onViewTerms"
+                                   styleClass="link"/>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ─── Error / Status label ─── -->
+                <Label fx:id="statusLabel" text="" wrapText="true"
+                       styleClass="status-label" managed="true"/>
+
+                <!-- ─── Action Buttons (StackPane demo) ─── -->
+                <HBox spacing="12" alignment="CENTER_RIGHT" styleClass="button-bar">
+                    <Button text="Clear Form" onAction="#onClear"
+                            styleClass="btn-secondary"/>
+                    <Button text="Submit Registration" onAction="#onSubmit"
+                            styleClass="btn-primary" defaultButton="true"/>
+                </HBox>
+
+                <!-- bottom padding inside scroll -->
+                <Region prefHeight="20"/>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- ═══════════════════════  BOTTOM NAV  ═══════════════════════ -->
+    <bottom>
+        <HBox styleClass="bottom-bar" alignment="CENTER_LEFT" spacing="10">
+            <Label text="Already registered?"/>
+            <Button text="View All Users" onAction="#onViewUsers"
+                    styleClass="btn-link"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

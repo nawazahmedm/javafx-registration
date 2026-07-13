@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.learn.registration.view.UserListViewController"
+            prefWidth="980" prefHeight="660"
+            stylesheets="@../css/style.css">
+
+    <!-- ═══════════════  TOP BAR  ═══════════════ -->
+    <top>
+        <VBox styleClass="top-bar">
+            <!-- Title row + session banner -->
+            <HBox alignment="CENTER_LEFT" spacing="0">
+                <VBox HBox.hgrow="ALWAYS">
+                    <Label text="Registered Users" styleClass="page-title"/>
+                    <Label text="Manage all registered accounts"
+                           styleClass="page-subtitle"/>
+                </VBox>
+                <!-- Session banner: who is logged in + role badge + logout -->
+                <HBox spacing="10" alignment="CENTER_RIGHT"
+                      styleClass="session-banner">
+                    <Label fx:id="sessionUserLabel" text="Logged in as: —"
+                           styleClass="session-user-label"/>
+                    <Label fx:id="sessionRoleLabel" text="ROLE"
+                           styleClass="role-badge-user"/>
+                    <Button text="Logout" onAction="#onLogout"
+                            styleClass="btn-logout"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ═══════════════  CENTER  ═══════════════ -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- Toolbar -->
+            <ToolBar>
+                <Label text="Search:"/>
+                <TextField fx:id="searchField"
+                           promptText="Filter by name or email…"
+                           prefWidth="260" styleClass="form-input"/>
+                <Separator orientation="VERTICAL"/>
+                <Label fx:id="countLabel" text="0 users" styleClass="form-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="↻  Refresh"        onAction="#onRefresh"
+                        styleClass="btn-secondary"/>
+                <Button text="+ New Registration" onAction="#onNewRegistration"
+                        styleClass="btn-primary"/>
+            </ToolBar>
+
+            <!-- Status bar -->
+            <Label fx:id="statusLabel" text="" wrapText="true"
+                   maxWidth="Infinity" styleClass="status-label"
+                   visible="false" managed="false"/>
+
+            <!-- Table -->
+            <TableView fx:id="userTable" VBox.vgrow="ALWAYS"
+                       styleClass="table-view">
+                <placeholder>
+                    <Label text="No users registered yet"
+                           styleClass="form-label"/>
+                </placeholder>
+                <columns>
+                    <TableColumn fx:id="colId"
+                                 text="ID" prefWidth="45"
+                                 style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colFirstName"
+                                 text="First Name" prefWidth="110"/>
+                    <TableColumn fx:id="colLastName"
+                                 text="Last Name"  prefWidth="110"/>
+                    <TableColumn fx:id="colEmail"
+                                 text="Email"      prefWidth="190"/>
+                    <TableColumn fx:id="colPhone"
+                                 text="Phone"      prefWidth="110"/>
+                    <TableColumn fx:id="colGender"
+                                 text="Gender"     prefWidth="70"
+                                 style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colCountry"
+                                 text="Country"    prefWidth="100"/>
+                    <TableColumn fx:id="colNewsletter"
+                                 text="Newsletter" prefWidth="80"
+                                 style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colRole"
+                                 text="Role"       prefWidth="70"
+                                 style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colDate"
+                                 text="Registered At" prefWidth="130"/>
+                    <TableColumn fx:id="colActions"
+                                 text="Actions"    prefWidth="160"
+                                 sortable="false"
+                                 style="-fx-alignment: CENTER;"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+    <!-- ═══════════════  BOTTOM  ═══════════════ -->
+    <bottom>
+        <HBox styleClass="bottom-bar" alignment="CENTER_LEFT" spacing="10">
+            <Button text="← Back to Registration" onAction="#onBack"
+                    styleClass="btn-link"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="footerLabel"
+                   text="JavaFX Registration App — Learning MVC + Security"
+                   styleClass="form-label"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

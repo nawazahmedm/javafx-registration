@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  EDIT USER VIEW
+  Opens as a new Stage (modal window) when the user clicks Edit in the list.
+  Pre-populated by EditUserViewController.setUser(User).
+
+  Demonstrates:
+    - Reuse of the same component set as registration in a compact layout
+    - A read-only id label (not editable)
+    - TabPane with two tabs (Basic Info / Preferences) for layout variety
+    - ProgressBar as a visual fill-indicator (purely decorative here)
+    - Tooltip on inputs
+    - Accordion (collapsed by default) for the optional bio section
+-->
+<BorderPane xmlns="http://javafx.com/javafx/22"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.learn.registration.view.EditUserViewController"
+            prefWidth="640" prefHeight="560"
+            stylesheets="@../css/style.css">
+
+    <!-- ═══════════════════════  TOP BAR  ═══════════════════════ -->
+    <top>
+        <VBox styleClass="top-bar">
+            <Label text="Edit User" styleClass="page-title"/>
+            <Label fx:id="editSubtitle" text="Updating user #—"
+                   styleClass="page-subtitle"/>
+        </VBox>
+    </top>
+
+    <!-- ═══════════════════════  CENTER  ═══════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox spacing="16" styleClass="form-container">
+
+                <!-- Hidden id field (displayed as read-only label) -->
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="User ID:" styleClass="form-label"/>
+                    <Label fx:id="idLabel" text="" styleClass="form-label"
+                           style="-fx-text-fill:#1a73e8; -fx-font-weight:bold;"/>
+                </HBox>
+
+                <!-- ── TabPane: Basic Info / Preferences ── -->
+                <TabPane tabClosingPolicy="UNAVAILABLE"
+                         styleClass="section-pane">
+
+                    <!-- TAB 1 : Basic Information -->
+                    <Tab text="Basic Information">
+                        <VBox spacing="14" styleClass="form-container"
+                              style="-fx-padding: 14 16;">
+
+                            <GridPane hgap="12" vgap="10">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="120" prefWidth="140"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints minWidth="120" prefWidth="140"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+
+                                <!-- First Name -->
+                                <Label text="First Name *"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                       styleClass="form-label"/>
+                                <TextField fx:id="firstNameField"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                           styleClass="form-input">
+                                    <tooltip><Tooltip text="Enter the user's first name"/></tooltip>
+                                </TextField>
+
+                                <!-- Last Name -->
+                                <Label text="Last Name *"
+                                       GridPane.columnIndex="2" GridPane.rowIndex="0"
+                                       styleClass="form-label"/>
+                                <TextField fx:id="lastNameField"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="0"
+                                           styleClass="form-input">
+                                    <tooltip><Tooltip text="Enter the user's last name"/></tooltip>
+                                </TextField>
+
+                                <!-- Email -->
+                                <Label text="Email *"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                       styleClass="form-label"/>
+                                <TextField fx:id="emailField"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                           styleClass="form-input">
+                                    <tooltip><Tooltip text="Must be a valid email address"/></tooltip>
+                                </TextField>
+
+                                <!-- Phone -->
+                                <Label text="Phone"
+                                       GridPane.columnIndex="2" GridPane.rowIndex="1"
+                                       styleClass="form-label"/>
+                                <TextField fx:id="phoneField"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="1"
+                                           styleClass="form-input"/>
+
+                                <!-- Country -->
+                                <Label text="Country"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="2"
+                                       styleClass="form-label"/>
+                                <ComboBox fx:id="countryCombo"
+                                          GridPane.columnIndex="1" GridPane.rowIndex="2"
+                                          maxWidth="Infinity" styleClass="form-input"/>
+
+                                <!-- Gender (radio buttons) -->
+                                <Label text="Gender"
+                                       GridPane.columnIndex="2" GridPane.rowIndex="2"
+                                       styleClass="form-label"/>
+                                <HBox spacing="12" alignment="CENTER_LEFT"
+                                      GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                    <RadioButton fx:id="radioMale"   text="Male"/>
+                                    <RadioButton fx:id="radioFemale" text="Female"/>
+                                    <RadioButton fx:id="radioOther"  text="Other"/>
+                                </HBox>
+                            </GridPane>
+
+                            <!-- Hobbies checkboxes -->
+                            <Label text="Hobbies:" styleClass="form-label"/>
+                            <FlowPane hgap="16" vgap="6">
+                                <CheckBox fx:id="cbReading"   text="Reading"/>
+                                <CheckBox fx:id="cbGaming"    text="Gaming"/>
+                                <CheckBox fx:id="cbCooking"   text="Cooking"/>
+                                <CheckBox fx:id="cbTraveling" text="Traveling"/>
+                                <CheckBox fx:id="cbMusic"     text="Music"/>
+                                <CheckBox fx:id="cbSports"    text="Sports"/>
+                                <CheckBox fx:id="cbArt"       text="Art"/>
+                                <CheckBox fx:id="cbCoding"    text="Coding"/>
+                            </FlowPane>
+
+                        </VBox>
+                    </Tab>
+
+                    <!-- TAB 2 : Preferences -->
+                    <Tab text="Preferences &amp; Bio">
+                        <VBox spacing="14" styleClass="form-container"
+                              style="-fx-padding: 14 16;">
+
+                            <!-- Profile completion progress bar (visual only) -->
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Profile completeness:" styleClass="form-label"/>
+                                <ProgressBar fx:id="profileProgress" progress="0.5"
+                                             prefWidth="200"
+                                             style="-fx-accent: #1a73e8;"/>
+                                <Label fx:id="progressLabel" text="50%" styleClass="slider-value"/>
+                            </HBox>
+
+                            <Separator/>
+
+                            <!-- Newsletter checkbox -->
+                            <CheckBox fx:id="cbNewsletter"
+                                      text="Subscribe to newsletter"
+                                      styleClass="form-check"/>
+                            <CheckBox fx:id="cbTerms"
+                                      text="Terms &amp; Conditions accepted"
+                                      styleClass="form-check-required"/>
+
+                            <Separator/>
+
+                            <!-- Accordion for Bio (collapsed by default — demonstrates Accordion) -->
+                            <Accordion>
+                                <panes>
+                                    <TitledPane text="Bio / About Me" expanded="false">
+                                        <TextArea fx:id="bioArea"
+                                                  prefRowCount="4" wrapText="true"
+                                                  promptText="Tell us something…"
+                                                  styleClass="form-textarea"/>
+                                    </TitledPane>
+                                </panes>
+                            </Accordion>
+
+                        </VBox>
+                    </Tab>
+
+                </TabPane>
+
+                <!-- Status label -->
+                <Label fx:id="statusLabel" text="" wrapText="true"
+                       maxWidth="Infinity" styleClass="status-label"
+                       managed="true" visible="false"/>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- ═══════════════════════  BOTTOM BUTTONS  ═══════════════════════ -->
+    <bottom>
+        <HBox styleClass="bottom-bar" alignment="CENTER_RIGHT" spacing="12">
+            <Button text="Cancel" onAction="#onCancel"
+                    styleClass="btn-secondary"/>
+            <Button text="Save Changes" onAction="#onSave"
+                    styleClass="btn-primary" defaultButton="true"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
