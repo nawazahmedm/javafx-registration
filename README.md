@@ -19,173 +19,268 @@ role-based access control, and an audit log.
 
 ---
 
-## Application Flow
+## Full Navigation Flow
 
 ```
-┌─────────────┐     login      ┌───────────────┐    Edit button   ┌──────────────┐
-│  Login      │ ─────────────► │  User List    │ ───────────────► │  Edit User   │
-│  Screen     │                │  Screen       │                   │  (Modal)     │
-└─────────────┘                └───────────────┘                   └──────────────┘
-       │                              │
-       │ Register here                │ + New Registration / ← Back
-       ▼                              ▼
-┌─────────────────────────────────────────────┐
-│           Registration Form                 │
-└─────────────────────────────────────────────┘
+                    ┌──────────────────────────────────┐
+                    │         APP STARTS               │
+                    └─────────────┬────────────────────┘
+                                  │
+                                  ▼
+          ┌───────────────────────────────────────────┐
+          │              LOGIN SCREEN                  │
+          │  ┌─────────────────┐  ┌─────────────────┐ │
+          │  │  Admin Login    │  │   User Login    │ │
+          │  │  (username +    │  │  (email +       │ │
+          │  │   password)     │  │   password)     │ │
+          │  └────────┬────────┘  └────────┬────────┘ │
+          │           │  success            │  success  │
+          └───────────┼─────────────────────┼───────────┘
+                      │                     │
+                      └──────────┬──────────┘
+                                 │
+              "Register here" ◄──┤──► login success
+                      │          │
+                      ▼          ▼
+    ┌─────────────────────┐   ┌─────────────────────────────────────────┐
+    │  REGISTRATION FORM  │   │            USER LIST                    │
+    │                     │   │                                         │
+    │  Personal Info      │   │  TableView: ID, Name, Email, Phone,     │
+    │  Password + Confirm │   │  Gender, Country, Newsletter, Role,     │
+    │  Gender (Radio)     │   │  Registered At, Actions                 │
+    │  Hobbies (Checkbox) │   │                                         │
+    │  Experience (Slider)│   │  [Edit]   → opens Edit Modal            │
+    │  Bio (TextArea)     │   │  [Delete] → admin only, confirms first  │
+    │  Newsletter         │   │  [Search] → filters live               │
+    │  Terms & Conditions │   │  [Refresh]→ reloads from DB            │
+    │                     │   │  [+ New Registration] ──────────────┐  │
+    │  [Clear Form]       │   │  [← Back to Registration] ──────────┘  │
+    │  [Submit] ──────────┼───►  [Logout] → back to Login              │
+    └─────────────────────┘   └──────────────────┬──────────────────────┘
+                                                  │ Edit button
+                                                  ▼
+                                ┌─────────────────────────────────┐
+                                │         EDIT USER MODAL         │
+                                │                                 │
+                                │  ┌─────────────┬─────────────┐  │
+                                │  │ Basic Info  │Preferences  │  │
+                                │  │             │& Bio        │  │
+                                │  │ Name        │ProgressBar  │  │
+                                │  │ Email       │ Newsletter  │  │
+                                │  │ Phone       │ Terms       │  │
+                                │  │ Country     │ Bio (Acc.)  │  │
+                                │  │ Gender      │             │  │
+                                │  │ Hobbies     │             │  │
+                                │  └─────────────┴─────────────┘  │
+                                │                                 │
+                                │  [Cancel]    [Save Changes]     │
+                                └─────────────────────────────────┘
 ```
 
 ---
 
-## Screens
+## Screen 1 — Login
 
-### 1. Login Screen
-
-The app opens on the login screen — nothing is accessible without valid credentials.
-
-- **Admin Login** tab — authenticates against the `admin_users` table (username + BCrypt password)
-- **User Login** tab — authenticates against the `users` table (email + BCrypt password)
-- Default admin credentials are shown in the hint box
-- "Register here" navigates to the registration form without requiring login
+> **Entry point of the app. Nothing is accessible without valid credentials.**
 
 ![Login Screen](docs/screenshots/01-login.png)
 
-> **Default admin:** username `admin` / password `admin123`
+**What you can do here:**
+- Toggle between **Admin Login** (username) and **User Login** (email) using the tab buttons
+- Enter credentials and press **Login as Admin** or **Login as User**
+- Click **Register here** at the bottom to go to the Registration form without logging in
+
+**Navigation from here:**
+| Action | Goes to |
+|--------|---------|
+| Successful admin login | User List |
+| Successful user login | User List |
+| Click "Register here" | Registration Form |
+
+**Default admin credentials:**
+```
+Username : admin
+Password : admin123
+```
 
 ---
 
-### 2. Registration Form — Personal Information
+## Screen 2 — Registration Form (Personal Info)
 
-A scrollable form packed with every major JavaFX UI component.
+> **Scrollable form demonstrating every major JavaFX UI component.**
 
-**Components visible:**
-- `TextField` — First Name, Last Name, Email, Phone
-- `DatePicker` — Date of Birth
-- `ComboBox` — Country dropdown
-- `PasswordField` — Password with live strength indicator
-- `PasswordField` — Confirm Password
-- `TitledPane` — section card wrapper
-- `GridPane` — two-column form layout
+![Registration Form - Personal Info](docs/screenshots/02-registration-top.png)
 
-![Registration Form - Top](docs/screenshots/02-registration-top.png)
+**Components on this screen:**
+| Component | Field |
+|-----------|-------|
+| `TextField` | First Name, Last Name, Email, Phone |
+| `DatePicker` | Date of Birth |
+| `ComboBox` | Country (dropdown) |
+| `PasswordField` | Password (with live strength indicator) |
+| `PasswordField` | Confirm Password |
+| `RadioButton` + `ToggleGroup` | Gender — Male / Female / Other |
+| `CheckBox` (×8) | Hobbies — Reading, Gaming, Cooking, Traveling, Music, Sports, Art, Coding |
+| `TitledPane` | Section card wrapper |
+| `GridPane` | Two-column form layout |
 
-**Gender section** uses `RadioButton` + `ToggleGroup` (mutually exclusive).
-**Hobbies section** uses independent `CheckBox` controls.
+**Navigation from here:**
+| Action | Goes to |
+|--------|---------|
+| Scroll down | Profile & Preferences section |
+| Click "View All Users" (bottom) | User List |
 
 ---
 
-### 3. Registration Form — Profile & Preferences
+## Screen 3 — Registration Form (Profile & Preferences)
 
-The bottom half of the scrollable registration form.
+> **Bottom half of the scrollable registration form.**
 
-**Components visible:**
-- `Slider` — Years of experience with live label update
-- `TextArea` — Bio / About Me (multi-line, wrappable)
-- `CheckBox` — Subscribe to newsletter
-- `CheckBox` — Terms & Conditions (required)
-- `Hyperlink` — View Terms & Conditions link
-- `Button` — Clear Form (secondary) + Submit Registration (primary)
-- `Separator` — visual divider
-- `ScrollPane` — wraps the entire form
+![Registration Form - Profile](docs/screenshots/03-registration-bottom.png)
 
-![Registration Form - Bottom](docs/screenshots/03-registration-bottom.png)
+**Components on this screen:**
+| Component | Field |
+|-----------|-------|
+| `Slider` | Years of experience (0–30, live label update) |
+| `TextArea` | Bio / About Me (multi-line, wrappable) |
+| `CheckBox` | Subscribe to newsletter |
+| `CheckBox` | Accept Terms & Conditions (required) |
+| `Hyperlink` | View Terms & Conditions (opens Alert dialog) |
+| `Separator` | Visual divider |
+| `ScrollPane` | Wraps the entire form |
+| `Button` | Clear Form (secondary) |
+| `Button` | Submit Registration (primary, default) |
 
-**Password rules enforced:**
+**Password rules enforced before submit:**
 - Minimum 8 characters
 - At least 1 uppercase letter
 - At least 1 number
 - Both password fields must match
 - Plain-text password is **never stored** — BCrypt hash only
 
+**Navigation from here:**
+| Action | Goes to |
+|--------|---------|
+| Click "Submit Registration" (valid form) | User List |
+| Click "View All Users" | User List |
+| Click "Clear Form" | Stays — resets all fields |
+
 ---
 
-### 4. User List
+## Screen 4 — User List
 
-Displays all registered users in a `TableView`. Navigated to automatically
-after a successful login or registration.
-
-**Features visible:**
-- `TableView` with 11 columns: ID, First Name, Last Name, Email, Phone, Gender, Country, Newsletter, Role, Registered At, Actions
-- `ToolBar` — Search field + user count + Refresh + New Registration buttons
-- `TextField` — live search filters all rows instantly (no button press)
-- **Actions column** — Edit (green) + Delete (red) buttons per row, built in Java code
-- **Session banner** — top right shows logged-in username + role badge + Logout button
-- Role badge: `ADMIN` (yellow) / `USER` (grey)
-- Delete button is **disabled** for non-admin users
+> **Central hub of the app. Shows all registered users with full management actions.**
 
 ![User List](docs/screenshots/04-user-list.png)
 
-> Logged in as `admin` — both Edit and Delete buttons are active.
-> Regular users see Delete greyed out.
+**What's on this screen:**
+| Element | Description |
+|---------|-------------|
+| Session banner (top-right) | Shows logged-in username + role badge (ADMIN/USER) |
+| Logout button | Clears session → back to Login |
+| Search box | Filters all rows live as you type (name, email, country) |
+| User count | Updates with the filtered count |
+| TableView | 11 columns: ID, First Name, Last Name, Email, Phone, Gender, Country, Newsletter, Role, Registered At, Actions |
+| Edit button (green) | Opens Edit User modal — available to all users |
+| Delete button (red) | Confirms then deletes — **admin only**, greyed out for regular users |
+| Refresh button | Reloads all users from the database |
+| + New Registration | Navigates to Registration Form |
+| ← Back to Registration | Navigates to Registration Form |
+
+**Navigation from here:**
+| Action | Goes to |
+|--------|---------|
+| Click Edit on a row | Edit User modal (same window stays open) |
+| Click Delete → confirm | Deletes row, stays on User List |
+| Click + New Registration | Registration Form |
+| Click ← Back | Registration Form |
+| Click Logout | Login Screen |
 
 ---
 
-### 5. Edit User — Basic Information Tab
+## Screen 5 — Edit User (Basic Information Tab)
 
-Opens as a **modal dialog** when Edit is clicked on any row.
-Pre-populated with the selected user's existing data.
-
-**Tab 1 — Basic Information:**
-- `TabPane` with 2 tabs
-- `TextField` — First Name, Last Name, Email, Phone
-- `ComboBox` — Country (pre-selected)
-- `RadioButton` + `ToggleGroup` — Gender (pre-selected)
-- `CheckBox` — Hobbies (pre-ticked from saved data)
-- `GridPane` — two-column layout
-- `Button` — Cancel + Save Changes
+> **Modal dialog pre-populated with the selected user's data. Opens over the User List.**
 
 ![Edit User - Basic Info](docs/screenshots/05-edit-basic.png)
 
+**Tab 1 — Basic Information:**
+| Component | Field |
+|-----------|-------|
+| `Label` | User ID (read-only) |
+| `TabPane` | Two tabs: Basic Information / Preferences & Bio |
+| `TextField` | First Name, Last Name, Email, Phone |
+| `ComboBox` | Country (pre-selected) |
+| `RadioButton` + `ToggleGroup` | Gender (pre-selected from saved data) |
+| `CheckBox` (×8) | Hobbies (pre-ticked from saved data) |
+| `GridPane` | Two-column layout |
+| `Tooltip` | Hints on each input field |
+
+**Navigation from here:**
+| Action | Goes to |
+|--------|---------|
+| Click "Preferences & Bio" tab | Tab 2 of same modal |
+| Click Save Changes (valid) | Closes modal → User List refreshes |
+| Click Cancel | Closes modal → User List unchanged |
+
 ---
 
-### 6. Edit User — Preferences & Bio Tab
+## Screen 6 — Edit User (Preferences & Bio Tab)
 
-The second tab of the edit modal.
-
-**Tab 2 — Preferences & Bio:**
-- `ProgressBar` — profile completeness (updates live as checkboxes are ticked)
-- `CheckBox` — Subscribe to newsletter (pre-ticked)
-- `CheckBox` — Terms & Conditions accepted (pre-ticked)
-- `Accordion` — collapsible Bio / About Me section
-- `Separator` — visual divider
+> **Second tab of the Edit User modal — profile completeness and preferences.**
 
 ![Edit User - Preferences](docs/screenshots/06-edit-preferences.png)
 
-> Profile completeness shows **40%** — calculated from how many optional
-> fields are filled in.
+**Tab 2 — Preferences & Bio:**
+| Component | Field |
+|-----------|-------|
+| `ProgressBar` | Profile completeness % (updates live as checkboxes are ticked) |
+| `CheckBox` | Subscribe to newsletter (pre-ticked from saved data) |
+| `CheckBox` | Terms & Conditions accepted (pre-ticked) |
+| `Accordion` | Collapsible Bio / About Me section |
+| `TitledPane` | Inside Accordion — expands to show TextArea |
+| `Separator` | Visual dividers |
+
+**Navigation from here:**
+| Action | Goes to |
+|--------|---------|
+| Click "Basic Information" tab | Tab 1 of same modal |
+| Click Save Changes | Closes modal → User List refreshes |
+| Click Cancel | Closes modal → User List unchanged |
 
 ---
 
-## JavaFX Components Used
+## JavaFX Components — Complete Reference
 
-| Component | Screen |
-|-----------|--------|
+| Component | Used in |
+|-----------|---------|
 | `TextField` | Registration, Edit User |
 | `PasswordField` | Login, Registration |
 | `DatePicker` | Registration |
 | `ComboBox` | Registration, Edit User |
-| `RadioButton` + `ToggleGroup` | Registration (gender), Login (mode toggle), Edit User |
-| `ToggleButton` | Login (Admin/User switcher) |
+| `RadioButton` + `ToggleGroup` | Registration (gender), Edit User (gender) |
+| `ToggleButton` + `ToggleGroup` | Login (Admin/User mode switcher) |
 | `CheckBox` | Registration (hobbies, newsletter, terms), Edit User |
-| `TextArea` | Registration (bio) |
-| `Slider` | Registration (experience) |
+| `TextArea` | Registration bio, Edit User bio |
+| `Slider` | Registration (years of experience) |
 | `TableView` + `TableColumn` | User List |
 | `Button` | All screens |
-| `Hyperlink` | Registration (Terms link) |
+| `Hyperlink` | Registration (Terms & Conditions link) |
 | `Label` | All screens |
 | `Separator` | Registration, Edit User |
 | `ToolBar` | User List |
 | `TitledPane` | Registration (section cards) |
-| `TabPane` + `Tab` | Edit User |
-| `Accordion` | Edit User (Bio section) |
+| `TabPane` + `Tab` | Edit User (2 tabs) |
+| `Accordion` | Edit User (collapsible Bio) |
 | `ProgressBar` | Edit User (profile completeness) |
-| `Tooltip` | Edit User (disabled Delete hint) |
+| `Tooltip` | Edit User (field hints, disabled Delete hint) |
+| `Alert` | Confirmation dialogs, Terms popup |
 | `BorderPane` | Root layout — all screens |
 | `VBox` | Vertical stacking — all screens |
 | `HBox` | Horizontal stacking — all screens |
-| `GridPane` | Two-column form grid |
+| `GridPane` | Two-column form layout |
 | `FlowPane` | Wrapping hobby checkboxes |
 | `ScrollPane` | Scrollable registration form |
-| `Alert` | Confirmation dialogs, Terms popup |
 
 ---
 
@@ -216,8 +311,8 @@ The second tab of the edit modal.
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-**Key rule:** Views never call `DatabaseHelper` directly.
-All data flows through `UserController` or `AuthController`.
+> **Key rule:** Views never call `DatabaseHelper` directly.
+> All data flows through `UserController` or `AuthController`.
 
 ---
 
@@ -225,24 +320,24 @@ All data flows through `UserController` or `AuthController`.
 
 | Feature | Implementation |
 |---------|---------------|
-| Password hashing | BCrypt, cost factor 12 |
+| Password hashing | BCrypt, cost factor 12 — never stored as plain text |
 | Password strength | 8+ chars, 1 uppercase, 1 digit — live UI feedback |
-| Login gate | App starts on login screen — no bypass |
+| Login gate | App opens on Login screen — no bypass |
 | Session management | `SessionManager` static holder — cleared on logout |
-| Role-based access | Delete gated to `admin` (UI disabled + controller check) |
+| Role-based access | Delete gated to `admin` role (UI disabled + controller enforced) |
 | Audit trail | Every INSERT / UPDATE / DELETE logged to `audit_log` table |
 | SQL injection prevention | All queries use `PreparedStatement` |
-| Generic error messages | "Invalid username or password" — no field-level hints |
+| Generic login errors | "Invalid username or password" — no hint which field failed |
 
 ---
 
 ## Database Tables
 
-SQLite file `users.db` is created automatically on first launch.
+SQLite file `users.db` created automatically on first launch.
 
 | Table | Purpose |
 |-------|---------|
-| `users` | Registered user accounts (includes `password_hash`, `role`) |
+| `users` | Registered accounts — includes `password_hash` + `role` |
 | `admin_users` | Admin credentials — seeded with `admin` / `admin123` |
 | `audit_log` | Append-only record of every insert / update / delete |
 
@@ -254,7 +349,7 @@ SQLite file `users.db` is created automatically on first launch.
 - JDK 17 or 21 — [adoptium.net](https://adoptium.net)
 - Maven 3.8+ — [maven.apache.org](https://maven.apache.org)
 
-### Maven settings (one-time)
+### One-time Maven setup
 Create `C:\Users\<you>\.m2\settings.xml`:
 ```xml
 <settings>
@@ -272,8 +367,7 @@ mvn clean compile
 mvn javafx:run
 ```
 
-> Delete `users.db` only on first run after a fresh clone so the schema
-> is created correctly.
+> Delete `users.db` on first run after a fresh clone so the new schema is created cleanly.
 
 ---
 
@@ -282,6 +376,7 @@ mvn javafx:run
 ```
 javafx-registration/
 ├── pom.xml
+├── README.md
 ├── HOW_TO_RUN.md
 ├── JAVAFX_INTERVIEW_GUIDE.md
 ├── docs/screenshots/
